@@ -1,19 +1,13 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YowisMens - Tracker Menstruasi & Tembak Dalam</title>
+    <title>YowisMens - Gentle Period & Tembak Dalam Tracker</title>
     
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons CDN -->
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <script>
@@ -21,959 +15,814 @@
             theme: {
                 extend: {
                     colors: {
-                        femmeBg: '#fdf2f8',
-                        femmePink: {
-                            50: '#fff0f5',
-                            100: '#fce7f3',
-                            200: '#fbcfe8',
-                            300: '#f472b6',
-                            400: '#e879f9',
-                            500: '#ec4899',
-                            600: '#db2777',
-                            700: '#be185d'
+                        brand: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
                         },
-                        safeGreen: {
+                        safe: {
                             50: '#f0fdf4',
                             100: '#dcfce7',
-                            300: '#86efac',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
                             600: '#16a34a',
-                            700: '#15803d'
                         },
-                        fertilePurple: {
+                        fertile: {
                             50: '#faf5ff',
                             100: '#f3e8ff',
                             200: '#e9d5ff',
                             500: '#a855f7',
-                            600: '#9333ea',
-                            700: '#7e22ce'
                         }
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: linear-gradient(180deg, #fdf2f8 0%, #fff0f5 100%);
-            color: #374151; 
-            -webkit-tap-highlight-color: transparent; 
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fdf2f4;
+            -webkit-tap-highlight-color: transparent;
         }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 9999px; }
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.94); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(251, 207, 232, 0.8); 
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
         }
-        .heart-pulse {
-            animation: pulse-heart 1.4s infinite ease-in-out;
+        .animate-pop {
+            animation: pop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        @keyframes pulse-heart {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.25); }
+        @keyframes pop {
+            0% { transform: scale(0.92); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
-<body class="h-full flex flex-col selection:bg-femmePink-200">
+<body class="text-slate-800 min-h-screen pb-10 flex flex-col items-center">
 
-    <!-- 1. HEADER BRANDING -->
-    <header class="w-full bg-white/90 backdrop-blur-md border-b border-femmePink-200 z-30 shrink-0 sticky top-0 shadow-xs">
-        <div class="max-w-md mx-auto px-3 py-2 flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-femmePink-500 to-femmePink-600 text-white flex items-center justify-center shadow-md shadow-femmePink-200 shrink-0">
-                    <i data-lucide="heart-pulse" class="w-4 h-4"></i>
-                </div>
-                <div>
-                    <h1 class="font-extrabold text-gray-800 text-sm tracking-tight leading-none">
-                        YowisMens
-                    </h1>
-                    <p class="text-[9px] font-bold text-femmePink-600 mt-0.5">Made with love by /MkhzZ</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center space-x-1 bg-femmePink-50 p-1 rounded-xl border border-femmePink-100">
-                <button onclick="switchTab('home')" id="tab-btn-home" class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-white text-femmePink-600 shadow-2xs transition-all">Beranda</button>
-                <button onclick="switchTab('history')" id="tab-btn-history" class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold text-gray-500 hover:text-gray-800 transition-all">Riwayat</button>
-            </div>
-        </div>
-    </header>
-
-    <!-- MAIN BODY CONTAINER -->
-    <main class="w-full max-w-md mx-auto flex-1 overflow-y-auto px-2.5 py-2.5 space-y-2.5">
+    <!-- Container Utama App -->
+    <div class="w-full max-w-md bg-white min-h-screen shadow-xl flex flex-col justify-between relative">
         
-        <!-- ================= HOME TAB ================= -->
-        <div id="view-home" class="space-y-2.5">
+        <!-- Main Content Area -->
+        <div class="p-3 space-y-2.5">
             
-            <!-- 2. PENGATURAN JENIS SIKLUS MENSTRUASI (SEBELUM KALENDER) -->
-            <section class="bg-white/95 rounded-2xl p-2 border border-femmePink-200 shadow-2xs space-y-1.5">
-                <div class="flex items-center justify-between">
-                    <label class="text-[9px] font-black text-gray-700 uppercase flex items-center space-x-1">
-                        <i data-lucide="sliders" class="w-3 h-3 text-femmePink-500"></i>
-                        <span>Jenis Siklus Menstruasi</span>
-                    </label>
-                    <select id="select-cycle-type" onchange="updateCycleType(this.value)" class="text-[9px] font-extrabold bg-femmePink-50 border border-femmePink-200 rounded-lg p-1 text-femmePink-700 outline-none focus:ring-1 focus:ring-femmePink-400 cursor-pointer">
-                        <option value="regular">Siklus Teratur (28 Hari)</option>
-                        <option value="irregular">Siklus Tidak Teratur</option>
-                    </select>
-                </div>
-                
-                <!-- Input Siklus Teratur -->
-                <div id="panel-regular" class="flex items-center justify-between bg-femmePink-50/60 rounded-xl p-1.5 border border-femmePink-100">
-                    <span class="text-[9px] font-bold text-gray-600">Rata-rata Panjang Siklus</span>
-                    <div class="flex items-center space-x-1">
-                        <input type="number" id="inp-reg-cycle" onchange="saveInlineSettings()" oninput="saveInlineSettings()" class="w-12 text-[10px] font-black text-center border border-femmePink-200 rounded-lg bg-white p-0.5 outline-none focus:border-femmePink-500 text-femmePink-700" min="20" max="45" value="28">
-                        <span class="text-[8px] font-bold text-gray-400 uppercase">Hari</span>
+            <!-- 1. HEADER BRANDING (YowisMens) -->
+            <header class="flex items-center justify-between bg-gradient-to-r from-rose-50 to-pink-50 p-2.5 rounded-2xl border border-rose-100 shadow-sm">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-pink-400 flex items-center justify-center text-white shadow-md shadow-rose-200">
+                        <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-800 leading-tight tracking-tight">YowisMens</h1>
+                        <p class="text-[11px] font-medium text-rose-500">Made with love by /MkhzZ</p>
                     </div>
                 </div>
+                <div class="flex items-center gap-1">
+                    <button onclick="resetAllData()" title="Reset Data" class="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-100/50 transition">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </header>
 
-                <!-- Input Siklus Tidak Teratur -->
-                <div id="panel-irregular" class="hidden grid grid-cols-2 gap-1.5">
-                    <div class="flex items-center justify-between bg-femmePink-50/60 rounded-xl p-1.5 border border-femmePink-100">
-                        <span class="text-[8px] font-bold text-gray-500 uppercase">Terpendek</span>
-                        <div class="flex items-center space-x-0.5">
-                            <input type="number" id="inp-irreg-short" onchange="saveInlineSettings()" oninput="saveInlineSettings()" class="w-10 text-[10px] font-black text-center border border-femmePink-200 rounded-lg bg-white p-0.5 outline-none focus:border-femmePink-500 text-femmePink-700" min="20" max="45" value="27">
-                            <span class="text-[8px] font-bold text-gray-400">Hr</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between bg-femmePink-50/60 rounded-xl p-1.5 border border-femmePink-100">
-                        <span class="text-[8px] font-bold text-gray-500 uppercase">Terpanjang</span>
-                        <div class="flex items-center space-x-0.5">
-                            <input type="number" id="inp-irreg-long" onchange="saveInlineSettings()" oninput="saveInlineSettings()" class="w-10 text-[10px] font-black text-center border border-femmePink-200 rounded-lg bg-white p-0.5 outline-none focus:border-femmePink-500 text-femmePink-700" min="20" max="45" value="32">
-                            <span class="text-[8px] font-bold text-gray-400">Hr</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. KALENDER INTERAKSI (TEPAT DI BAWAH JENIS SIKLUS) -->
-            <section class="glass-card rounded-2xl p-2.5 shadow-xs">
-                <!-- Month Header Nav -->
+            <!-- 2. JENIS SIKLUS MENSTRUASI (Posisi Di Atas Kalender) -->
+            <section class="bg-slate-50 border border-slate-200/80 rounded-2xl p-2.5 shadow-sm">
                 <div class="flex items-center justify-between mb-2">
-                    <h2 id="cal-title" class="text-xs font-black text-gray-800 ml-1">Bulan Tahun</h2>
-                    <div class="flex items-center bg-femmePink-50 rounded-xl border border-femmePink-200 p-0.5 space-x-0.5">
-                        <button onclick="changeMonth(-1)" class="p-1 rounded-lg hover:bg-femmePink-200 text-femmePink-600 transition-colors"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
-                        <button onclick="resetMonth()" class="px-2 text-[9px] font-extrabold text-femmePink-700 uppercase tracking-wider">HARI INI</button>
-                        <button onclick="changeMonth(1)" class="p-1 rounded-lg hover:bg-femmePink-200 text-femmePink-600 transition-colors"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                        <i data-lucide="sliders" class="w-3.5 h-3.5 text-rose-500"></i>
+                        <span>JENIS SIKLUS MENSTRUASI</span>
+                    </div>
+                    <span id="cycleBadge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">Teratur</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-1.5 mb-2">
+                    <button type="button" onclick="setCycleType('regular')" id="btnCycleRegular"
+                        class="py-1.5 px-2 text-xs font-semibold rounded-xl border border-rose-500 bg-rose-500 text-white transition-all shadow-sm">
+                        Siklus Teratur
+                    </button>
+                    <button type="button" onclick="setCycleType('irregular')" id="btnCycleIrregular"
+                        class="py-1.5 px-2 text-xs font-semibold rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-rose-200 transition-all">
+                        Tidak Teratur
+                    </button>
+                </div>
+
+                <!-- Input Parameter Teratur -->
+                <div id="regularInputs" class="flex items-center justify-between bg-white p-2 rounded-xl border border-slate-200">
+                    <label class="text-xs font-medium text-slate-600">Rata-rata Panjang Siklus:</label>
+                    <div class="flex items-center gap-1">
+                        <input type="number" id="inputCycleLength" value="28" min="20" max="45" onchange="updateCycleSettings()"
+                            class="w-12 text-center text-xs font-bold bg-slate-100 border border-slate-300 rounded-lg py-1 text-slate-800 focus:outline-none focus:border-rose-500">
+                        <span class="text-[11px] font-semibold text-slate-500">Hari</span>
                     </div>
                 </div>
 
-                <!-- Day Names Header (NO color legend line above) -->
-                <div class="grid grid-cols-7 gap-0.5 text-center text-[9px] font-black text-gray-400 uppercase mb-1">
-                    <div>Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div>
+                <!-- Input Parameter Tidak Teratur -->
+                <div id="irregularInputs" class="hidden grid-cols-2 gap-2 bg-white p-2 rounded-xl border border-slate-200">
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 mb-0.5">Siklus Terpendek</label>
+                        <div class="flex items-center gap-1">
+                            <input type="number" id="inputMinCycle" value="26" min="20" max="45" onchange="updateCycleSettings()"
+                                class="w-full text-center text-xs font-bold bg-slate-100 border border-slate-300 rounded-lg py-1 text-slate-800 focus:outline-none focus:border-rose-500">
+                            <span class="text-[10px] text-slate-400">hr</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-medium text-slate-500 mb-0.5">Siklus Terpanjang</label>
+                        <div class="flex items-center gap-1">
+                            <input type="number" id="inputMaxCycle" value="32" min="20" max="50" onchange="updateCycleSettings()"
+                                class="w-full text-center text-xs font-bold bg-slate-100 border border-slate-300 rounded-lg py-1 text-slate-800 focus:outline-none focus:border-rose-500">
+                            <span class="text-[10px] text-slate-400">hr</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. KALENDER INTERAKTIF (Bebas Legenda Atas) -->
+            <section class="bg-white rounded-2xl p-3 border border-rose-100 shadow-sm">
+                <!-- Navigasi Bulan -->
+                <div class="flex items-center justify-between mb-2">
+                    <h2 id="calendarMonthYear" class="text-sm font-bold text-slate-800">Oktober 2026</h2>
+                    <div class="flex items-center gap-1">
+                        <button onclick="prevMonth()" class="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="goToToday()" class="px-2 py-1 text-[11px] font-bold text-rose-600 bg-rose-50 rounded-lg hover:bg-rose-100">
+                            HARI INI
+                        </button>
+                        <button onclick="nextMonth()" class="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Header Hari -->
+                <div class="calendar-grid mb-1 text-center">
+                    <span class="text-[10px] font-bold text-slate-400 py-1">MIN</span>
+                    <span class="text-[10px] font-bold text-slate-400 py-1">SEN</span>
+                    <span class="text-[10px] font-bold text-slate-400 py-1">SEL</span>
+                    <span class="text-[10px] font-bold text-slate-400 py-1">RAB</span>
+                    <span class="text-[10px] font-bold text-slate-400 py-1">KAM</span>
+                    <span class="text-[10px] font-bold text-slate-400 py-1">JUM</span>
+                    <span class="text-[10px] font-bold text-slate-400 py-1">SAB</span>
+                </div>
+
+                <!-- Grid Tanggal -->
+                <div id="calendarDays" class="calendar-grid gap-1"></div>
+            </section>
+
+            <!-- 4. PANEL AKSI TANGGAL TERPILIH (Input & Revisi Fleksibel) -->
+            <section class="bg-rose-50/60 border border-rose-100 rounded-2xl p-2.5 flex items-center justify-between gap-2">
+                <div>
+                    <span class="text-[10px] font-semibold text-rose-500 uppercase tracking-wider block">Tanggal Terpilih</span>
+                    <div id="selectedDateText" class="text-xs font-extrabold text-slate-800">Pilih Tanggal...</div>
                 </div>
                 
-                <!-- Calendar Grid -->
-                <div id="cal-grid" class="grid grid-cols-7 gap-1 text-center">
-                    <!-- Days dynamically generated -->
-                </div>
-            </section>
-
-            <!-- 4. PANEL AKSI TANGGAL TERPILIH -->
-            <section class="bg-gradient-to-r from-femmePink-50 via-white to-femmePink-50 rounded-2xl p-2.5 border border-femmePink-200 shadow-2xs space-y-1.5">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-7 h-7 rounded-xl bg-femmePink-100 flex items-center justify-center border border-femmePink-200 text-femmePink-600 shrink-0">
-                            <i data-lucide="calendar-heart" class="w-3.5 h-3.5"></i>
-                        </div>
-                        <div>
-                            <p class="text-[8px] font-bold text-gray-400 uppercase tracking-wide">Tanggal Terpilih</p>
-                            <p id="action-date-label" class="text-xs font-black text-gray-800 leading-none">Pilih Tanggal</p>
-                        </div>
-                    </div>
-                    <span id="period-status-tag" class="text-[8px] font-black px-2 py-0.5 rounded-md bg-femmePink-100 text-femmePink-700 border border-femmePink-200">
-                        Status Terpilih
-                    </span>
-                </div>
-
-                <!-- Action Buttons Container -->
-                <div id="action-btn-container" class="flex flex-wrap items-center gap-1.5 pt-0.5">
-                    <!-- Action buttons dynamically injected -->
-                </div>
-            </section>
-
-            <!-- 5. KARTU STATUS FASE TERPILIH -->
-            <section id="phase-card" class="glass-card rounded-2xl p-3 shadow-xs relative overflow-hidden transition-all duration-300">
-                <div class="flex items-start justify-between relative z-10">
-                    <div class="space-y-1 max-w-[240px]">
-                        <div id="phase-badge" class="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-gray-100 text-gray-600">
-                            <span>Status Fase</span>
-                        </div>
-                        <h3 id="phase-title" class="text-xs font-black text-gray-800 leading-snug">Pilih Tanggal di Kalender</h3>
-                        <p id="phase-desc" class="text-[9.5px] font-medium text-gray-600 leading-relaxed">
-                            Klik tanggal pada kalender untuk melihat prediksi status kesuburan dan keamanan.
-                        </p>
-                    </div>
+                <div class="flex items-center gap-1.5">
+                    <button id="btnMarkStart" onclick="markPeriodStart()" 
+                        class="px-2.5 py-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs font-bold shadow-sm transition active:scale-95">
+                        Mulai Mens Di Sini
+                    </button>
                     
-                    <!-- Day of Cycle Counter -->
-                    <div class="w-12 h-12 rounded-2xl bg-white shadow-2xs border border-femmePink-200 flex flex-col items-center justify-center shrink-0 p-1">
-                        <span id="phase-day-num" class="text-xs font-black text-femmePink-600 leading-none">-</span>
-                        <span class="text-[7px] font-extrabold text-gray-400 uppercase mt-0.5">Hari Siklus</span>
-                    </div>
+                    <button id="btnMarkEnd" onclick="markPeriodEnd()" 
+                        class="px-2.5 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-sm transition active:scale-95">
+                        Selesai Mens Di Sini
+                    </button>
+
+                    <button id="btnClearEnd" onclick="clearPeriodEnd()" title="Hapus Tanda Selesai Mens"
+                        class="hidden p-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-bold transition">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
                 </div>
             </section>
 
-            <!-- 6. KARTU PREDIKSI MEDIS (4 GRID CARDS) -->
-            <section class="space-y-1.5">
-                <div class="flex items-center justify-between px-1">
-                    <h4 class="text-[10px] font-black uppercase text-gray-500 tracking-wider flex items-center space-x-1">
-                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-femmePink-500"></i>
-                        <span>Kartu Prediksi Medis</span>
-                    </h4>
+            <!-- 5. KARTU STATUS FASE DI TANGGAL TERPILIH -->
+            <section id="statusCard" class="bg-gradient-to-br from-rose-500 to-pink-500 rounded-2xl p-3 text-white shadow-md shadow-rose-200 transition-all">
+                <div class="flex items-center justify-between mb-1">
+                    <span id="statusBadge" class="bg-white/20 backdrop-blur-md px-2 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase">
+                        FASE MENSTRUASI
+                    </span>
+                    <span id="cycleDayInfo" class="text-[11px] font-semibold text-rose-100">Hari ke-1</span>
+                </div>
+                
+                <h3 id="statusTitle" class="text-base font-bold mb-0.5">Menstruasi Sedang Berlangsung</h3>
+                <p id="statusDesc" class="text-[11px] text-rose-100 leading-snug">
+                    Klik tanggal di kalender jika ingin mengisikan hari pertama haid atau merevisi hari terakhir.
+                </p>
+            </section>
+
+            <!-- 6. KARTU PREDIKSI MEDIS (GRID 4 KARTU) -->
+            <div class="space-y-1.5">
+                <div class="flex items-center gap-1 text-xs font-bold text-slate-700 px-1">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-rose-500"></i>
+                    <span>KARTU PREDIKSI MEDIS</span>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
-                    <!-- Card 1: Haid Berikutnya -->
-                    <div class="glass-card rounded-2xl p-2.5 border-l-4 border-l-femmePink-500 shadow-2xs flex flex-col justify-between space-y-1">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[8px] font-black uppercase text-femmePink-600 flex items-center gap-1">
-                                🩸 Haid Berikutnya
-                            </span>
-                            <i data-lucide="droplet" class="w-3 h-3 text-femmePink-400"></i>
+                    <!-- Haid Berikutnya -->
+                    <div class="bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <div class="w-2 rounded-full h-2 bg-rose-500"></div>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Haid Berikutnya</span>
                         </div>
                         <div>
-                            <p id="stat-next" class="text-xs font-black text-gray-800 leading-tight">-</p>
-                            <p class="text-[8px] font-semibold text-gray-400 mt-0.5">Perkiraan mulai</p>
+                            <div id="predNextPeriod" class="text-xs font-bold text-slate-800">--</div>
+                            <div class="text-[9px] text-slate-400">Proyeksi HPHT berikutnya</div>
                         </div>
                     </div>
 
-                    <!-- Card 2: Masa Subur -->
-                    <div class="glass-card rounded-2xl p-2.5 border-l-4 border-l-fertilePurple-500 shadow-2xs flex flex-col justify-between space-y-1">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[8px] font-black uppercase text-fertilePurple-600 flex items-center gap-1">
-                                ✨ Masa Subur
-                            </span>
-                            <i data-lucide="sparkles" class="w-3 h-3 text-fertilePurple-400"></i>
+                    <!-- Masa Subur -->
+                    <div class="bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <div class="w-2 rounded-full h-2 bg-purple-500"></div>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Masa Subur</span>
                         </div>
                         <div>
-                            <p id="stat-fertile" class="text-xs font-black text-gray-800 leading-tight">-</p>
-                            <p class="text-[8px] font-semibold text-gray-400 mt-0.5">Rentang kesuburan</p>
+                            <div id="predFertile" class="text-xs font-bold text-slate-800">--</div>
+                            <div class="text-[9px] text-slate-400">Rentang kesuburan tinggi</div>
                         </div>
                     </div>
 
-                    <!-- Card 3: Perkiraan Ovulasi -->
-                    <div class="glass-card rounded-2xl p-2.5 border-l-4 border-l-amber-500 shadow-2xs flex flex-col justify-between space-y-1">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[8px] font-black uppercase text-amber-600 flex items-center gap-1">
-                                ☀️ Perkiraan Ovulasi
-                            </span>
-                            <i data-lucide="sun" class="w-3 h-3 text-amber-400"></i>
+                    <!-- Ovulasi -->
+                    <div class="bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <div class="w-2 rounded-full h-2 bg-amber-500"></div>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Perkiraan Ovulasi</span>
                         </div>
                         <div>
-                            <p id="stat-ovulation" class="text-xs font-black text-gray-800 leading-tight">-</p>
-                            <p class="text-[8px] font-semibold text-gray-400 mt-0.5">Puncak kesuburan</p>
+                            <div id="predOvulation" class="text-xs font-bold text-slate-800">--</div>
+                            <div class="text-[9px] text-slate-400">Puncak pelepasan sel telur</div>
                         </div>
                     </div>
 
-                    <!-- Card 4: Tembak Dalam 💖 -->
-                    <div id="card-tembak-dalam" class="glass-card rounded-2xl p-2.5 border-l-4 border-l-emerald-500 shadow-2xs flex flex-col justify-between space-y-1 bg-gradient-to-br from-emerald-50/50 to-white">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[8px] font-black uppercase text-emerald-700 flex items-center gap-1">
-                                💖 Tembak Dalam
-                            </span>
-                            <span id="badge-heart-status" class="text-[10px]">❤️</span>
+                    <!-- Tembak Dalam (Masa Aman 2 Hari) -->
+                    <div class="bg-emerald-50/70 p-2.5 rounded-xl border border-emerald-200/80 shadow-sm flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs">💖</span>
+                                <span class="text-[10px] font-bold text-emerald-800 uppercase tracking-tight">Tembak Dalam</span>
+                            </div>
+                            <span class="text-[9px] font-extrabold text-emerald-600 bg-emerald-100 px-1.5 py-0.2 rounded-full">2 Hari</span>
                         </div>
                         <div>
-                            <p id="stat-tembak-dalam" class="text-xs font-black text-gray-800 leading-tight">Tandai akhir haid dulu</p>
-                            <p id="subtext-tembak-dalam" class="text-[8px] font-semibold text-emerald-600 mt-0.5">Masa tidak subur (max 2 hari)</p>
+                            <div id="predTembakDalam" class="text-xs font-bold text-emerald-900">--</div>
+                            <div id="predTembakDalamSub" class="text-[9px] text-emerald-700">Masa aman pasca haid</div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- 7. HEALTH TIPS -->
-            <section class="bg-femmePink-100/60 rounded-2xl p-2.5 border border-femmePink-200/80 flex items-start space-x-2">
-                <div class="p-1.5 bg-white rounded-xl text-femmePink-600 shadow-2xs shrink-0 mt-0.5">
-                    <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i>
-                </div>
+            <!-- Tips Kesehatan Kewanitaan -->
+            <div class="bg-amber-50/60 border border-amber-200/60 rounded-xl p-2.5 flex items-start gap-2">
+                <i data-lucide="lightbulb" class="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5"></i>
                 <div>
-                    <p class="text-[9px] font-black text-femmePink-700 uppercase">Petunjuk Multi-Siklus & Revisi Tanggal</p>
-                    <p class="text-[9px] font-medium text-gray-600 leading-tight mt-0.5">
-                        Anda dapat mencatat haid baru di bulan berikutnya secara mandiri. Jika di tengah jalan ternyata haid memanjang, Anda bisa mengubah tanggal selesai kapan saja. Masa "Tembak Dalam" (❤️) akan langsung berpindah menyesuaikan 2 hari setelah selesai haid.
+                    <h4 class="text-[11px] font-bold text-amber-900">Tips Kesehatan Kewanitaan</h4>
+                    <p id="healthTipText" class="text-[10px] text-amber-800 leading-snug">
+                        Minum air putih secukupnya dan jaga kebersihan area kewanitaan secara rutin selama fase siklus Anda.
                     </p>
                 </div>
-            </section>
+            </div>
+
         </div>
 
-        <!-- ================= HISTORY TAB ================= -->
-        <div id="view-history" class="hidden space-y-2">
-            <section class="glass-card rounded-2xl p-3 shadow-xs space-y-2">
-                <div class="flex justify-between items-center border-b border-femmePink-100 pb-2">
-                    <h2 class="text-xs font-black text-gray-800 flex items-center space-x-1.5">
-                        <i data-lucide="history" class="w-4 h-4 text-femmePink-500"></i>
-                        <span>Riwayat Siklus Menstruasi</span>
-                    </h2>
-                    <span id="history-count" class="text-[9px] font-extrabold text-gray-400 uppercase">0 Catatan</span>
-                </div>
-                <div id="history-list" class="space-y-1.5">
-                    <!-- Dynamic History List -->
-                </div>
-            </section>
-        </div>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="text-center py-2 text-[8px] font-bold text-gray-400 border-t border-femmePink-100/60 bg-white/60 backdrop-blur-xs shrink-0">
-        YowisMens &bull; Made with love by /MkhzZ &copy; 2026
-    </footer>
-
-    <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-900/90 text-white px-3.5 py-2 rounded-2xl text-[10px] font-bold shadow-xl transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-50 flex items-center space-x-1.5">
-        <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-femmePink-400"></i>
-        <span id="toast-msg">Perubahan tersimpan</span>
+        <!-- Footer Branding -->
+        <footer class="p-2.5 text-center text-[10px] font-medium text-slate-400 border-t border-slate-100 bg-slate-50/50">
+            YowisMens • Made with love by /MkhzZ © 2026
+        </footer>
     </div>
 
-    <!-- CUSTOM CONFIRMATION MODAL (No alert/confirm) -->
-    <div id="modal-confirm" class="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white rounded-2xl p-4 max-w-xs w-full shadow-2xl border border-femmePink-200 space-y-3 text-center">
-            <div class="w-10 h-10 rounded-2xl bg-red-100 text-red-600 mx-auto flex items-center justify-center">
-                <i data-lucide="alert-triangle" class="w-5 h-5"></i>
-            </div>
-            <h3 id="modal-title" class="text-xs font-black text-gray-800">Konfirmasi Hapus</h3>
-            <p id="modal-msg" class="text-[10px] text-gray-600 font-medium leading-relaxed">Apakah Anda yakin ingin menghapus catatan ini?</p>
-            <div class="flex items-center space-x-2 pt-1">
-                <button onclick="closeModal()" class="flex-1 py-1.5 rounded-xl bg-gray-100 text-gray-700 text-[10px] font-bold hover:bg-gray-200">Batal</button>
-                <button id="modal-ok-btn" class="flex-1 py-1.5 rounded-xl bg-red-600 text-white text-[10px] font-bold shadow-xs hover:bg-red-700">Ya, Hapus</button>
-            </div>
-        </div>
+    <!-- Custom Toast Notification -->
+    <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs px-4 py-2 rounded-xl shadow-xl z-50 transition-all duration-300 opacity-0 pointer-events-none flex items-center gap-2">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toastMsg">Notifikasi</span>
     </div>
 
-    <!-- APPLICATION ENGINE JAVASCRIPT -->
+    <!-- LOGIKA JAVASCRIPT REAKTIF -->
     <script>
-        const STORAGE_KEY = 'yowismens_tracker_v3';
-
-        let state = {
+        // State Global Aplikasi
+        let appState = {
             cycleType: 'regular', // 'regular' | 'irregular'
             cycleLength: 28,
-            shortestCycle: 27,
-            longestCycle: 32,
-            periodLength: 5,
-            periods: [] // Array of { id: string, start: 'YYYY-MM-DD', end: 'YYYY-MM-DD' | null }
+            minCycle: 26,
+            maxCycle: 32,
+            periods: [], // Array siklus: [{ id: timestamp, startDate: 'YYYY-MM-DD', endDate: 'YYYY-MM-DD' | null }]
+            viewYear: 2026,
+            viewMonth: 9, // Oktober (0-indexed)
+            selectedDate: '2026-10-18'
         };
 
-        let currentMonthDate = new Date();
-        currentMonthDate.setDate(1);
-        let selectedDate = getTodayString();
+        // Inisialisasi Aplikasi Saat Diumat
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+            
+            // Set default selectedDate ke Hari Ini jika belum set
+            const todayStr = formatDate(new Date());
+            if (!appState.selectedDate) {
+                appState.selectedDate = todayStr;
+            }
+            const selDateObj = new Date(appState.selectedDate + 'T00:00:00');
+            appState.viewYear = selDateObj.getFullYear();
+            appState.viewMonth = selDateObj.getMonth();
 
-        // Date Helpers
-        function parseDate(str) {
-            if (!str) return new Date();
-            const [y, m, d] = str.split('-').map(Number);
-            return new Date(y, m - 1, d);
+            renderApp();
+        });
+
+        // Simpan & Muat LocalStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('yowismens_state', JSON.stringify({
+                cycleType: appState.cycleType,
+                cycleLength: appState.cycleLength,
+                minCycle: appState.minCycle,
+                maxCycle: appState.maxCycle,
+                periods: appState.periods,
+                selectedDate: appState.selectedDate
+            }));
         }
 
-        function toDateString(d) {
-            const y = d.getFullYear();
-            const m = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${y}-${m}-${day}`;
-        }
-
-        function getTodayString() {
-            return toDateString(new Date());
-        }
-
-        function addDays(dateStr, days) {
-            const d = parseDate(dateStr);
-            d.setDate(d.getDate() + days);
-            return toDateString(d);
-        }
-
-        // Initialize App
-        function initApp() {
-            const saved = localStorage.getItem(STORAGE_KEY);
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('yowismens_state');
             if (saved) {
-                try { state = JSON.parse(saved); } catch(e){}
-            }
-            lucide.createIcons();
-            syncSettingsUI();
-            updateAll();
-        }
-
-        function syncSettingsUI() {
-            document.getElementById('select-cycle-type').value = state.cycleType;
-            document.getElementById('inp-reg-cycle').value = state.cycleLength || 28;
-            document.getElementById('inp-irreg-short').value = state.shortestCycle || 27;
-            document.getElementById('inp-irreg-long').value = state.longestCycle || 32;
-
-            document.getElementById('panel-regular').classList.toggle('hidden', state.cycleType !== 'regular');
-            document.getElementById('panel-irregular').classList.toggle('hidden', state.cycleType !== 'irregular');
-        }
-
-        function updateCycleType(type) {
-            state.cycleType = type;
-            syncSettingsUI();
-            updateAll();
-        }
-
-        function saveInlineSettings() {
-            state.cycleLength = parseInt(document.getElementById('inp-reg-cycle').value) || 28;
-            state.shortestCycle = parseInt(document.getElementById('inp-irreg-short').value) || 27;
-            state.longestCycle = parseInt(document.getElementById('inp-irreg-long').value) || 32;
-            updateAll();
-        }
-
-        function saveState() {
-            // Keep periods sorted by start date ascending
-            state.periods.sort((a, b) => parseDate(a.start) - parseDate(b.start));
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        }
-
-        function showToast(msg) {
-            const el = document.getElementById('toast');
-            document.getElementById('toast-msg').innerText = msg;
-            el.classList.remove('opacity-0', 'translate-y-4');
-            setTimeout(() => el.classList.add('opacity-0', 'translate-y-4'), 2500);
-        }
-
-        function showConfirmModal(title, msg, onOk) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-msg').innerText = msg;
-            const okBtn = document.getElementById('modal-ok-btn');
-            okBtn.onclick = () => {
-                onOk();
-                closeModal();
-            };
-            document.getElementById('modal-confirm').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('modal-confirm').classList.add('hidden');
-        }
-
-        // PREDICTION CALCULATIONS (Medical Formula)
-        function getPredictionsForHpht(hphtStr) {
-            let nextPeriod, fertileStart, fertileEnd, ovulation;
-
-            if (state.cycleType === 'regular') {
-                nextPeriod = addDays(hphtStr, state.cycleLength);
-                fertileStart = addDays(hphtStr, 9);  // Hari ke-10
-                fertileEnd = addDays(hphtStr, 14);   // Hari ke-15
-                ovulation = addDays(hphtStr, 13);    // Hari ke-14
+                try {
+                    const parsed = JSON.parse(saved);
+                    appState.cycleType = parsed.cycleType || 'regular';
+                    appState.cycleLength = parsed.cycleLength || 28;
+                    appState.minCycle = parsed.minCycle || 26;
+                    appState.maxCycle = parsed.maxCycle || 32;
+                    appState.periods = parsed.periods || [];
+                    if (parsed.selectedDate) appState.selectedDate = parsed.selectedDate;
+                } catch(e) {
+                    console.error("Gagal membaca storage", e);
+                }
             } else {
-                const avgCycle = Math.round((state.shortestCycle + state.longestCycle) / 2);
-                nextPeriod = addDays(hphtStr, avgCycle);
-
-                const startOffset = state.shortestCycle - 18;
-                const endOffset = state.longestCycle - 11;
-
-                fertileStart = addDays(hphtStr, Math.max(1, startOffset - 1));
-                fertileEnd = addDays(hphtStr, Math.max(1, endOffset - 1));
-
-                const diffDays = Math.max(0, endOffset - startOffset);
-                const mid = Math.floor(diffDays / 2);
-                ovulation = addDays(fertileStart, mid);
+                // Sampel Data Awal jika kosong
+                appState.periods = [
+                    {
+                        id: Date.now(),
+                        startDate: '2026-10-14',
+                        endDate: '2026-10-19'
+                    }
+                ];
+                appState.selectedDate = '2026-10-18';
             }
-
-            return { nextPeriod, fertileStart, fertileEnd, ovulation };
         }
 
-        // Strict 2-day Tembak Dalam Helper (Only if end date is confirmed)
-        function getTembakDalamDays(periodEntry) {
-            if (!periodEntry || !periodEntry.end) {
-                return []; // NO LOVE ICON IF END DATE NOT MARKED
+        function resetAllData() {
+            if (confirm("Apakah Anda yakin ingin mereset semua riwayat haid & pengaturan?")) {
+                localStorage.removeItem('yowismens_state');
+                appState.periods = [];
+                appState.selectedDate = formatDate(new Date());
+                showToast("Data berhasil direset");
+                renderApp();
             }
-            const day1 = addDays(periodEntry.end, 1);
-            const day2 = addDays(periodEntry.end, 2);
-            return [day1, day2];
         }
 
-        function updateAll() {
-            saveState();
+        // Render Ulang Seluruh Komponen UI
+        function renderApp() {
+            syncCycleUI();
             renderCalendar();
-            renderActionPanel();
-            renderPhaseCard();
-            renderPredictions();
-            renderHistory();
+            updateSelectedDatePanel();
+            updateStatusCard();
+            updatePredictions();
             lucide.createIcons();
+            saveToLocalStorage();
         }
 
-        function changeMonth(delta) {
-            currentMonthDate.setMonth(currentMonthDate.getMonth() + delta);
-            updateAll();
+        // 1. Tipe Siklus & Inputs
+        function setCycleType(type) {
+            appState.cycleType = type;
+            renderApp();
         }
 
-        function resetMonth() {
-            currentMonthDate = new Date();
-            currentMonthDate.setDate(1);
-            selectedDate = getTodayString();
-            updateAll();
+        function updateCycleSettings() {
+            appState.cycleLength = parseInt(document.getElementById('inputCycleLength').value) || 28;
+            appState.minCycle = parseInt(document.getElementById('inputMinCycle').value) || 26;
+            appState.maxCycle = parseInt(document.getElementById('inputMaxCycle').value) || 32;
+            renderApp();
         }
 
-        // CALENDAR RENDER ENGINE
+        function syncCycleUI() {
+            const btnReg = document.getElementById('btnCycleRegular');
+            const btnIrreg = document.getElementById('btnCycleIrregular');
+            const regInputs = document.getElementById('regularInputs');
+            const irregInputs = document.getElementById('irregularInputs');
+            const badge = document.getElementById('cycleBadge');
+
+            if (appState.cycleType === 'regular') {
+                btnReg.className = "py-1.5 px-2 text-xs font-semibold rounded-xl border border-rose-500 bg-rose-500 text-white transition-all shadow-sm";
+                btnIrreg.className = "py-1.5 px-2 text-xs font-semibold rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-rose-200 transition-all";
+                regInputs.classList.remove('hidden');
+                regInputs.classList.add('flex');
+                irregInputs.classList.add('hidden');
+                irregInputs.classList.remove('grid');
+                badge.innerText = `Teratur (${appState.cycleLength} Hari)`;
+            } else {
+                btnIrreg.className = "py-1.5 px-2 text-xs font-semibold rounded-xl border border-rose-500 bg-rose-500 text-white transition-all shadow-sm";
+                btnReg.className = "py-1.5 px-2 text-xs font-semibold rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-rose-200 transition-all";
+                irregInputs.classList.remove('hidden');
+                irregInputs.classList.add('grid');
+                regInputs.classList.add('hidden');
+                regInputs.classList.remove('flex');
+                badge.innerText = `Tidak Teratur (${appState.minCycle}-${appState.maxCycle} Hari)`;
+            }
+
+            document.getElementById('inputCycleLength').value = appState.cycleLength;
+            document.getElementById('inputMinCycle').value = appState.minCycle;
+            document.getElementById('inputMaxCycle').value = appState.maxCycle;
+        }
+
+        // 2. Kalender Interaktif
+        const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+        function prevMonth() {
+            appState.viewMonth--;
+            if (appState.viewMonth < 0) {
+                appState.viewMonth = 11;
+                appState.viewYear--;
+            }
+            renderApp();
+        }
+
+        function nextMonth() {
+            appState.viewMonth++;
+            if (appState.viewMonth > 11) {
+                appState.viewMonth = 0;
+                appState.viewYear++;
+            }
+            renderApp();
+        }
+
+        function goToToday() {
+            const today = new Date();
+            appState.viewYear = today.getFullYear();
+            appState.viewMonth = today.getMonth();
+            appState.selectedDate = formatDate(today);
+            renderApp();
+        }
+
         function renderCalendar() {
-            const year = currentMonthDate.getFullYear();
-            const month = currentMonthDate.getMonth();
-            const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-            document.getElementById('cal-title').innerText = `${monthNames[month]} ${year}`;
-
-            const grid = document.getElementById('cal-grid');
+            document.getElementById('calendarMonthYear').innerText = `${monthNames[appState.viewMonth]} ${appState.viewYear}`;
+            const grid = document.getElementById('calendarDays');
             grid.innerHTML = '';
 
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDay = new Date(appState.viewYear, appState.viewMonth, 1).getDay();
+            const daysInMonth = new Date(appState.viewYear, appState.viewMonth + 1, 0).getDate();
+            const todayStr = formatDate(new Date());
 
+            // Padding kosong awal bulan
             for (let i = 0; i < firstDay; i++) {
-                grid.appendChild(document.createElement('div'));
+                const emptyCell = document.createElement('div');
+                grid.appendChild(emptyCell);
             }
 
-            // Collect all Tembak Dalam days from all periods with confirmed ends
-            const tembakDalamSet = new Set();
-            state.periods.forEach(p => {
-                const tdDays = getTembakDalamDays(p);
-                tdDays.forEach(d => tembakDalamSet.add(d));
-            });
+            // Dapatkan HPHT Terakhir & Map Fase Seluruh Hari
+            const activePeriodMap = buildDatePhaseMap();
 
-            // Project predictions from the latest period
-            const projections = [];
-            if (state.periods.length > 0) {
-                const latest = state.periods[state.periods.length - 1];
-                let curStart = latest.start;
-                for (let i = 0; i < 3; i++) {
-                    const preds = getPredictionsForHpht(curStart);
-                    projections.push({
-                        start: curStart,
-                        fStart: preds.fertileStart,
-                        fEnd: preds.fertileEnd,
-                        ovu: preds.ovulation,
-                        isFuture: i > 0
-                    });
-                    curStart = preds.nextPeriod;
-                }
-            }
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateObj = new Date(appState.viewYear, appState.viewMonth, day);
+                const dateStr = formatDate(dateObj);
 
-            const todayStr = getTodayString();
-
-            for (let d = 1; d <= daysInMonth; d++) {
-                const dateObj = new Date(year, month, d);
-                const dateStr = toDateString(dateObj);
-
-                let isHaid = false;
-                let isPredHaid = false;
-                let isFertile = false;
-                let isOvulation = false;
-
-                // Check actual Haid from all period records
-                for (const p of state.periods) {
-                    const s = parseDate(p.start);
-                    const e = p.end ? parseDate(p.end) : parseDate(addDays(p.start, state.periodLength - 1));
-                    if (dateObj >= s && dateObj <= e) {
-                        isHaid = true;
-                        break;
-                    }
-                }
-
-                // Check predictions if not actual Haid
-                if (!isHaid) {
-                    for (const proj of projections) {
-                        if (proj.isFuture) {
-                            const ps = parseDate(proj.start);
-                            const pe = parseDate(addDays(proj.start, state.periodLength - 1));
-                            if (dateObj >= ps && dateObj <= pe) isPredHaid = true;
-                        }
-
-                        if (dateStr === proj.ovu) isOvulation = true;
-
-                        const fs = parseDate(proj.fStart);
-                        const fe = parseDate(proj.fEnd);
-                        if (dateObj >= fs && dateObj <= fe && !isOvulation) isFertile = true;
-                    }
-                }
-
-                const isTembakDalam = tembakDalamSet.has(dateStr);
-
-                // Create Cell Button
-                const cell = document.createElement('button');
-                cell.className = "h-8 text-[10px] font-extrabold rounded-xl transition-all relative flex flex-col items-center justify-center border ";
-
-                if (isHaid) {
-                    cell.className += "bg-femmePink-500 text-white border-femmePink-600 shadow-2xs ";
-                } else if (isTembakDalam) {
-                    cell.className += "bg-emerald-100 text-emerald-800 border-emerald-300 font-black shadow-2xs ";
-                } else if (isPredHaid) {
-                    cell.className += "bg-femmePink-100 text-femmePink-700 border-femmePink-200 ";
-                } else if (isOvulation) {
-                    cell.className += "bg-white border-2 border-amber-500 text-amber-700 shadow-2xs ";
-                } else if (isFertile) {
-                    cell.className += "bg-fertilePurple-100 text-fertilePurple-700 border-fertilePurple-200 ";
-                } else {
-                    cell.className += "bg-white/80 text-gray-700 border-transparent hover:bg-femmePink-50 ";
-                }
-
-                if (dateStr === todayStr) {
-                    cell.classList.add('ring-1', 'ring-femmePink-500');
-                }
-
-                if (dateStr === selectedDate) {
-                    cell.classList.add('ring-2', 'ring-gray-900', 'ring-offset-1', 'z-10');
-                }
-
-                cell.innerHTML = `<span>${d}</span>`;
-
-                // Love icon ONLY appears if Tembak Dalam condition is met
-                if (isTembakDalam) {
-                    cell.innerHTML += `<span class="text-[8px] leading-none absolute -top-1 -right-1 heart-pulse">❤️</span>`;
-                }
-
-                cell.onclick = () => {
-                    selectedDate = dateStr;
-                    updateAll();
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => {
+                    appState.selectedDate = dateStr;
+                    renderApp();
                 };
 
-                grid.appendChild(cell);
-            }
-        }
+                let bgClass = "bg-slate-50 text-slate-700 hover:bg-rose-50";
+                let borderClass = "border border-transparent";
+                let iconContent = '';
 
-        // MULTI-CYCLE & REVISABLE ACTION PANEL
-        function renderActionPanel() {
-            const dateObj = parseDate(selectedDate);
-            const formatted = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-            document.getElementById('action-date-label').innerText = formatted;
+                const phaseInfo = activePeriodMap[dateStr];
 
-            const container = document.getElementById('action-btn-container');
-            const statusTag = document.getElementById('period-status-tag');
-            container.innerHTML = '';
+                if (phaseInfo) {
+                    if (phaseInfo.type === 'period') {
+                        bgClass = "bg-rose-500 text-white font-bold shadow-sm";
+                    } else if (phaseInfo.type === 'tembak_dalam') {
+                        bgClass = "bg-emerald-100 text-emerald-900 font-bold border border-emerald-300";
+                        iconContent = `<span class="text-[10px] leading-none text-rose-500">❤️</span>`;
+                    } else if (phaseInfo.type === 'fertile') {
+                        bgClass = "bg-purple-100 text-purple-900 font-medium";
+                    } else if (phaseInfo.type === 'ovulation') {
+                        bgClass = "bg-amber-100 text-amber-900 font-bold border border-amber-300";
+                    }
+                }
 
-            // Find period that explicitly starts on selectedDate
-            const exactStartPeriod = state.periods.find(p => p.start === selectedDate);
-            
-            // Find period whose start date is <= selectedDate (the active or relevant period)
-            const activePeriod = state.periods
-                .filter(p => parseDate(selectedDate) >= parseDate(p.start))
-                .sort((a, b) => parseDate(b.start) - parseDate(a.start))[0];
+                // Tandai jika Selected
+                if (dateStr === appState.selectedDate) {
+                    borderClass = "ring-2 ring-slate-900 ring-offset-1 z-10 font-black";
+                }
 
-            if (exactStartPeriod) {
-                statusTag.innerText = "Awal Haid Siklus Ini";
-                statusTag.className = "text-[8px] font-black px-2 py-0.5 rounded-md bg-femmePink-500 text-white";
+                // Tandai Hari Ini
+                if (dateStr === todayStr && dateStr !== appState.selectedDate) {
+                    borderClass += " border-2 border-rose-500";
+                }
 
-                container.innerHTML += `
-                    <button onclick="confirmRemovePeriod('${exactStartPeriod.id}')" class="px-2.5 py-1.5 rounded-xl bg-red-50 text-red-600 border border-red-200 text-[9px] font-black shadow-2xs hover:bg-red-100 active:scale-95 transition-all">
-                        <i data-lucide="trash-2" class="w-3 h-3 inline mr-1"></i>Hapus Catatan Mens Ini
-                    </button>
+                btn.className = `h-9 rounded-xl text-xs flex flex-col items-center justify-center relative transition-all ${bgClass} ${borderClass}`;
+                btn.innerHTML = `
+                    <span>${day}</span>
+                    ${iconContent}
                 `;
 
-                if (exactStartPeriod.end) {
-                    const endFormatted = parseDate(exactStartPeriod.end).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                    container.innerHTML += `
-                        <button onclick="clearEndPeriod('${exactStartPeriod.id}')" class="px-2.5 py-1.5 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-[9px] font-black shadow-2xs hover:bg-amber-100 active:scale-95 transition-all">
-                            <i data-lucide="x-circle" class="w-3 h-3 inline mr-1"></i>Hapus Selesai Mens (Selesai: ${endFormatted})
-                        </button>
-                    `;
-                } else {
-                    container.innerHTML += `
-                        <button onclick="updateEndPeriod('${exactStartPeriod.id}', '${selectedDate}')" class="px-2.5 py-1.5 rounded-xl bg-femmePink-600 text-white text-[9px] font-black shadow-2xs hover:bg-femmePink-700 active:scale-95 transition-all">
-                            Tandai Selesai Mens Di Sini
-                        </button>
-                    `;
-                }
-            } else if (activePeriod) {
-                const isCurrentlyEnd = activePeriod.end === selectedDate;
-
-                if (isCurrentlyEnd) {
-                    statusTag.innerText = "Akhir Haid Siklus Ini";
-                    statusTag.className = "text-[8px] font-black px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-300";
-
-                    container.innerHTML += `
-                        <button onclick="clearEndPeriod('${activePeriod.id}')" class="px-2.5 py-1.5 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-[9px] font-black shadow-2xs hover:bg-amber-100 active:scale-95 transition-all">
-                            <i data-lucide="rotate-ccw" class="w-3 h-3 inline mr-1"></i>Hapus/Batal Selesai Mens
-                        </button>
-                    `;
-                } else if (activePeriod.end) {
-                    statusTag.innerText = "Siklus Terdaftar";
-                    statusTag.className = "text-[8px] font-black px-2 py-0.5 rounded-md bg-purple-100 text-purple-700 border border-purple-200";
-
-                    const oldEnd = parseDate(activePeriod.end).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                    container.innerHTML += `
-                        <button onclick="updateEndPeriod('${activePeriod.id}', '${selectedDate}')" class="px-2.5 py-1.5 rounded-xl bg-femmePink-600 text-white text-[9px] font-black shadow-2xs hover:bg-femmePink-700 active:scale-95 transition-all">
-                            <i data-lucide="edit-3" class="w-3 h-3 inline mr-1"></i>Ubah Selesai Mens Ke Sini (Prev: ${oldEnd})
-                        </button>
-                    `;
-                } else {
-                    statusTag.innerText = "Haid Berlangsung";
-                    statusTag.className = "text-[8px] font-black px-2 py-0.5 rounded-md bg-femmePink-100 text-femmePink-700 border border-femmePink-200";
-
-                    container.innerHTML += `
-                        <button onclick="updateEndPeriod('${activePeriod.id}', '${selectedDate}')" class="px-2.5 py-1.5 rounded-xl bg-femmePink-600 text-white text-[9px] font-black shadow-2xs hover:bg-femmePink-700 active:scale-95 transition-all">
-                            <i data-lucide="check-circle-2" class="w-3 h-3 inline mr-1"></i>Tandai Selesai Mens Di Sini
-                        </button>
-                    `;
-                }
-
-                // Allow starting a NEW period in subsequent dates/months!
-                container.innerHTML += `
-                    <button onclick="startNewPeriod('${selectedDate}')" class="px-2.5 py-1.5 rounded-xl bg-gray-900 text-white text-[9px] font-black shadow-2xs hover:bg-gray-800 active:scale-95 transition-all">
-                        <i data-lucide="plus-circle" class="w-3 h-3 inline mr-1"></i>Mulai Mens Baru Di Sini
-                    </button>
-                `;
-            } else {
-                statusTag.innerText = "Tanggal Bebas";
-                statusTag.className = "text-[8px] font-black px-2 py-0.5 rounded-md bg-gray-100 text-gray-500";
-
-                container.innerHTML += `
-                    <button onclick="startNewPeriod('${selectedDate}')" class="px-2.5 py-1.5 rounded-xl bg-femmePink-500 text-white text-[9px] font-black shadow-2xs hover:bg-femmePink-600 active:scale-95 transition-all">
-                        <i data-lucide="plus-circle" class="w-3 h-3 inline mr-1"></i>Mulai Mens Di Sini
-                    </button>
-                `;
-            }
-
-            if (state.periods.length > 0) {
-                container.innerHTML += `
-                    <button onclick="confirmResetAll()" title="Reset Semua Catatan" class="p-1.5 rounded-xl bg-gray-100 text-gray-400 hover:text-red-600 text-[9px] font-black transition-colors ml-auto">
-                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-                    </button>
-                `;
+                grid.appendChild(btn);
             }
         }
 
-        // Actions
-        function startNewPeriod(dateStr) {
-            // Check if already exists exactly
-            const exists = state.periods.find(p => p.start === dateStr);
-            if (exists) {
-                showToast("Tanggal ini sudah menjadi hari pertama menstruasi!");
-                return;
-            }
-            const newPeriod = {
-                id: Date.now().toString(),
-                start: dateStr,
-                end: null
-            };
-            state.periods.push(newPeriod);
-            showToast("Siklus menstruasi baru dicatat!");
-            updateAll();
-        }
+        // Evaluasi Fase Setiap Tanggal Berdasarkan Periode Haid
+        function buildDatePhaseMap() {
+            const map = {};
 
-        function updateEndPeriod(periodId, endStr) {
-            const p = state.periods.find(p => p.id === periodId);
-            if (p) {
-                if (parseDate(endStr) < parseDate(p.start)) {
-                    showToast("Tanggal selesai tidak boleh sebelum tanggal mulai!");
-                    return;
-                }
-                p.end = endStr;
-                showToast("Hari terakhir menstruasi berhasil diperbarui! ❤️");
-                updateAll();
-            }
-        }
+            // Urutkan periode haid
+            const sortedPeriods = [...appState.periods].sort((a,b) => new Date(a.startDate) - new Date(b.startDate));
 
-        function clearEndPeriod(periodId) {
-            const p = state.periods.find(p => p.id === periodId);
-            if (p) {
-                p.end = null;
-                showToast("Tanda selesai mens dibatalkan.");
-                updateAll();
-            }
-        }
+            sortedPeriods.forEach(p => {
+                const start = new Date(p.startDate + 'T00:00:00');
+                let end = p.endDate ? new Date(p.endDate + 'T00:00:00') : new Date(start.getTime() + 4 * 86400000); // default 5 hari
 
-        function confirmRemovePeriod(periodId) {
-            showConfirmModal(
-                "Hapus Catatan Siklus",
-                "Apakah Anda yakin ingin menghapus catatan menstruasi untuk siklus ini?",
-                () => {
-                    state.periods = state.periods.filter(p => p.id !== periodId);
-                    showToast("Catatan menstruasi berhasil dihapus.");
-                    updateAll();
-                }
-            );
-        }
-
-        function confirmResetAll() {
-            showConfirmModal(
-                "Reset Semua Data",
-                "Apakah Anda yakin ingin menghapus seluruh riwayat menstruasi dari aplikasi?",
-                () => {
-                    state.periods = [];
-                    showToast("Semua data berhasil direset.");
-                    updateAll();
-                }
-            );
-        }
-
-        // PHASE STATUS CARD RENDERER
-        function renderPhaseCard() {
-            const badge = document.getElementById('phase-badge');
-            const title = document.getElementById('phase-title');
-            const desc = document.getElementById('phase-desc');
-            const dayNum = document.getElementById('phase-day-num');
-
-            // Find relevant period for the selected date
-            const activePeriod = state.periods
-                .filter(p => parseDate(selectedDate) >= parseDate(p.start))
-                .sort((a, b) => parseDate(b.start) - parseDate(a.start))[0];
-
-            if (!activePeriod) {
-                badge.className = "inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-gray-100 text-gray-500";
-                badge.innerHTML = "<span>Belum Ada Data</span>";
-                title.innerText = "Siklus Belum Tercatat";
-                desc.innerText = "Silakan tandai hari pertama menstruasi Anda di kalender untuk melihat prediksi lengkap.";
-                dayNum.innerText = "-";
-                return;
-            }
-
-            const startObj = parseDate(activePeriod.start);
-            const targetObj = parseDate(selectedDate);
-            const diffDays = Math.floor((targetObj - startObj) / (1000 * 60 * 60 * 24));
-            const cycleDay = diffDays + 1;
-
-            const preds = getPredictionsForHpht(activePeriod.start);
-            const tembakDalamDays = getTembakDalamDays(activePeriod);
-
-            const isHaid = activePeriod.end 
-                ? (targetObj >= startObj && targetObj <= parseDate(activePeriod.end))
-                : (cycleDay >= 1 && cycleDay <= state.periodLength);
-
-            const isTembakDalam = tembakDalamDays.includes(selectedDate);
-            const isFertile = targetObj >= parseDate(preds.fertileStart) && targetObj <= parseDate(preds.fertileEnd);
-            const isOvulation = selectedDate === preds.ovulation;
-
-            dayNum.innerText = cycleDay > 0 ? cycleDay : '-';
-
-            if (isHaid) {
-                badge.className = "inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-femmePink-100 text-femmePink-700 border border-femmePink-200";
-                badge.innerHTML = "<i data-lucide='droplet' class='w-2.5 h-2.5'></i><span>Fase Menstruasi 🩸</span>";
-                title.innerText = "Haid Sedang Berlangsung";
-                desc.innerText = "Haid sedang berlangsung. Jika darah masih keluar, Anda bisa menggeser atau memperbarui tanggal selesai mens kapan saja.";
-            } else if (isTembakDalam) {
-                badge.className = "inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs";
-                badge.innerHTML = "<i data-lucide='heart' class='w-2.5 h-2.5 text-emerald-700 fill-emerald-600'></i><span>Fase Aman - Tembak Dalam 💖</span>";
-                title.innerText = "Masa Tidak Subur (Sangat Aman)";
-                desc.innerText = "Masa tidak subur (maksimal 2 hari setelah haid selesai). Sangat aman untuk berhubungan & tembak di dalam dengan risiko kehamilan sangat rendah.";
-            } else if (isOvulation) {
-                badge.className = "inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-200";
-                badge.innerHTML = "<i data-lucide='sun' class='w-2.5 h-2.5'></i><span>Puncak Ovulasi ☀️</span>";
-                title.innerText = "Hari Ovulasi Utama";
-                desc.innerText = "Pelepasan sel telur. Tingkat kesuburan berada di titik paling tinggi dalam siklus ini.";
-            } else if (isFertile) {
-                badge.className = "inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-fertilePurple-100 text-fertilePurple-800 border border-fertilePurple-200";
-                badge.innerHTML = "<i data-lucide='sparkles' class='w-2.5 h-2.5'></i><span>Masa Subur 💜</span>";
-                title.innerText = "Masa Kesuburan Aktif";
-                desc.innerText = "Risiko kehamilan tinggi. Gunakan kontrasepsi jika belum merencanakan kehamilan.";
-            } else {
-                badge.className = "inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-gray-100 text-gray-700 border border-gray-200";
-                badge.innerHTML = "<i data-lucide='shield-check' class='w-2.5 h-2.5'></i><span>Fase Luteal / Folikular 🟢</span>";
-                title.innerText = "Masa Tidak Subur Reguler";
-                desc.innerText = "Berada di luar jendela ovulasi dan masa subur.";
-            }
-        }
-
-        // PREDICTION CARDS RENDERER
-        function renderPredictions() {
-            const statNext = document.getElementById('stat-next');
-            const statFertile = document.getElementById('stat-fertile');
-            const statOvu = document.getElementById('stat-ovulation');
-            const statTembakDalam = document.getElementById('stat-tembak-dalam');
-            const subtextTembakDalam = document.getElementById('subtext-tembak-dalam');
-            const badgeHeart = document.getElementById('badge-heart-status');
-
-            // Latest period entry
-            const latest = state.periods.length > 0 ? state.periods[state.periods.length - 1] : null;
-
-            if (!latest) {
-                statNext.innerText = "-";
-                statFertile.innerText = "-";
-                statOvu.innerText = "-";
-                statTembakDalam.innerText = "Tandai awal haid dulu";
-                subtextTembakDalam.innerText = "Belum ada catatan";
-                badgeHeart.innerText = "🤍";
-                return;
-            }
-
-            const preds = getPredictionsForHpht(latest.start);
-
-            const formatFull = (dStr) => {
-                const d = parseDate(dStr);
-                return `${d.getDate()} ${d.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' })}`;
-            };
-
-            statNext.innerText = formatFull(preds.nextPeriod);
-            statOvu.innerText = formatFull(preds.ovulation);
-            statFertile.innerText = `${parseDate(preds.fertileStart).getDate()} - ${formatFull(preds.fertileEnd)}`;
-
-            // CARD 4: TEMBAK DALAM INFO
-            if (latest.end) {
-                const tdDays = getTembakDalamDays(latest);
-                const d1 = parseDate(tdDays[0]);
-                const d2 = parseDate(tdDays[1]);
+                // 1. Hari Haid Aktual
+                let current = new Date(start);
+                const actualEnd = p.endDate ? new Date(p.endDate + 'T00:00:00') : end;
                 
-                const str1 = `${d1.getDate()}`;
-                const str2 = `${d2.getDate()} ${d2.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' })}`;
+                while (current <= actualEnd) {
+                    map[formatDate(current)] = { type: 'period' };
+                    current.setDate(current.getDate() + 1);
+                }
 
-                statTembakDalam.innerText = `${str1} - ${str2}`;
-                subtextTembakDalam.innerText = "Masa tidak subur (2 hari)";
-                badgeHeart.innerText = "❤️";
+                // 2. Tembak Dalam (HANYA MUNCUL JIKA END DATE SUDAH DITANDAI)
+                if (p.endDate) {
+                    const endPeriodDate = new Date(p.endDate + 'T00:00:00');
+                    const tb1 = new Date(endPeriodDate); tb1.setDate(tb1.getDate() + 1);
+                    const tb2 = new Date(endPeriodDate); tb2.setDate(tb2.getDate() + 2);
+
+                    map[formatDate(tb1)] = { type: 'tembak_dalam' };
+                    map[formatDate(tb2)] = { type: 'tembak_dalam' };
+                }
+
+                // 3. Masa Subur & Ovulasi Proyeksi (dari HPHT p.startDate)
+                let fertileStart, fertileEnd, ovulDate;
+                if (appState.cycleType === 'regular') {
+                    const cl = appState.cycleLength;
+                    fertileStart = new Date(start); fertileStart.setDate(fertileStart.getDate() + (cl - 18));
+                    fertileEnd = new Date(start); fertileEnd.setDate(fertileEnd.getDate() + (cl - 11));
+                    ovulDate = new Date(start); ovulDate.setDate(ovulDate.getDate() + (cl - 14));
+                } else {
+                    fertileStart = new Date(start); fertileStart.setDate(fertileStart.getDate() + (appState.minCycle - 18));
+                    fertileEnd = new Date(start); fertileEnd.setDate(fertileEnd.getDate() + (appState.maxCycle - 11));
+                    ovulDate = new Date(fertileStart.getTime() + (fertileEnd.getTime() - fertileStart.getTime())/2);
+                }
+
+                let fCurr = new Date(fertileStart);
+                while(fCurr <= fertileEnd) {
+                    const fStr = formatDate(fCurr);
+                    if (!map[fStr] || map[fStr].type !== 'period') { // Jgn timpa haid
+                        if (formatDate(fCurr) === formatDate(ovulDate)) {
+                            map[fStr] = { type: 'ovulation' };
+                        } else {
+                            map[fStr] = { type: 'fertile' };
+                        }
+                    }
+                    fCurr.setDate(fCurr.getDate() + 1);
+                }
+            });
+
+            return map;
+        }
+
+        // 3. Action Panel (Tandai / Ubah Hari Haid)
+        function updateSelectedDatePanel() {
+            const selDateObj = new Date(appState.selectedDate + 'T00:00:00');
+            const formattedText = `${selDateObj.getDate()} ${monthNames[selDateObj.getMonth()]} ${selDateObj.getFullYear()}`;
+            document.getElementById('selectedDateText').innerText = formattedText;
+
+            // Cari apakah tanggal terpilih masuk ke salah satu siklus
+            const period = findPeriodForDate(appState.selectedDate);
+            const btnStart = document.getElementById('btnMarkStart');
+            const btnEnd = document.getElementById('btnMarkEnd');
+            const btnClearEnd = document.getElementById('btnClearEnd');
+
+            if (period) {
+                // Jika sudah ada periode di mana tanggal ini bagian darinya
+                if (period.endDate && formatDate(new Date(period.endDate+'T00:00:00')) === appState.selectedDate) {
+                    btnEnd.innerText = "Ubah Selesai Mens Ke Sini";
+                    btnClearEnd.classList.remove('hidden');
+                } else {
+                    btnEnd.innerText = "Selesai Mens Di Sini";
+                    btnClearEnd.classList.add('hidden');
+                }
             } else {
-                statTembakDalam.innerText = "Tandai akhir haid dulu";
-                subtextTembakDalam.innerText = "Klik 'Tandai Selesai Mens'";
-                badgeHeart.innerText = "🤍";
+                btnEnd.innerText = "Selesai Mens Di Sini";
+                btnClearEnd.classList.add('hidden');
             }
         }
 
-        // RENDER HISTORY TAB LIST
-        function renderHistory() {
-            const list = document.getElementById('history-list');
-            document.getElementById('history-count').innerText = `${state.periods.length} Catatan`;
-            list.innerHTML = '';
-
-            if (state.periods.length === 0) {
-                list.innerHTML = `<p class="text-[10px] text-center text-gray-400 py-6 font-bold">Belum ada riwayat siklus menstruasi.</p>`;
-                return;
-            }
-
-            // Display newest first in history
-            const sortedDesc = [...state.periods].reverse();
-
-            sortedDesc.forEach((p, idx) => {
-                const sObj = parseDate(p.start);
-                const sStr = sObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-                let eStr = "Belum Ditandai Akhir";
-                let dur = "-";
-
-                if (p.end) {
-                    const eObj = parseDate(p.end);
-                    eStr = eObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-                    dur = (Math.floor((eObj - sObj) / (1000 * 60 * 60 * 24)) + 1) + " Hari";
+        function findPeriodForDate(dateStr) {
+            const d = new Date(dateStr + 'T00:00:00');
+            return appState.periods.find(p => {
+                const s = new Date(p.startDate + 'T00:00:00');
+                if (!p.endDate) {
+                    // Jika belum selesai, anggap mencakup minimal sampai tanggal hari ini atau s + 10 hari
+                    const e = new Date(s); e.setDate(e.getDate() + 14);
+                    return d >= s && d <= e;
                 }
-
-                const item = document.createElement('div');
-                item.className = "p-2 rounded-xl bg-white border border-femmePink-100 shadow-2xs flex justify-between items-center";
-                item.innerHTML = `
-                    <div>
-                        <div class="flex items-center space-x-1.5 mb-0.5">
-                            <span class="text-[10px] font-black text-gray-800">Siklus #${state.periods.length - idx}</span>
-                            <span class="px-1.5 py-0.5 rounded-md ${p.end ? 'bg-emerald-50 text-emerald-700' : 'bg-femmePink-50 text-femmePink-600'} text-[8px] font-black uppercase">${dur}</span>
-                        </div>
-                        <p class="text-[9px] font-bold text-gray-500">${sStr} &rarr; ${eStr}</p>
-                    </div>
-                    <button onclick="confirmRemovePeriod('${p.id}')" class="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                    </button>
-                `;
-                list.appendChild(item);
+                const e = new Date(p.endDate + 'T00:00:00');
+                return d >= s && d <= e;
             });
         }
 
-        function switchTab(tab) {
-            document.getElementById('view-home').classList.toggle('hidden', tab !== 'home');
-            document.getElementById('view-history').classList.toggle('hidden', tab !== 'history');
+        function getLatestPeriod() {
+            if (appState.periods.length === 0) return null;
+            return [...appState.periods].sort((a,b) => new Date(b.startDate) - new Date(a.startDate))[0];
+        }
 
-            const btnHome = document.getElementById('tab-btn-home');
-            const btnHist = document.getElementById('tab-btn-history');
-
-            if (tab === 'home') {
-                btnHome.className = "px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-white text-femmePink-600 shadow-2xs transition-all";
-                btnHist.className = "px-2.5 py-1 rounded-lg text-[10px] font-extrabold text-gray-500 hover:text-gray-800 transition-all";
+        function markPeriodStart() {
+            const dateStr = appState.selectedDate;
+            
+            // Cek apakah sudah ada periode yang tumpang tindih
+            let existing = appState.periods.find(p => p.startDate === dateStr);
+            if (!existing) {
+                appState.periods.push({
+                    id: Date.now(),
+                    startDate: dateStr,
+                    endDate: null
+                });
+                showToast("Hari Pertama Haid Dicatat!");
             } else {
-                btnHist.className = "px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-white text-femmePink-600 shadow-2xs transition-all";
-                btnHome.className = "px-2.5 py-1 rounded-lg text-[10px] font-extrabold text-gray-500 hover:text-gray-800 transition-all";
+                showToast("Tanggal ini sudah ditandai awal haid.");
+            }
+            renderApp();
+        }
+
+        function markPeriodEnd() {
+            const dateStr = appState.selectedDate;
+            let period = findPeriodForDate(dateStr) || getLatestPeriod();
+
+            if (!period) {
+                // Jika belum ada haid tercatat sama sekali, buatkan sekalian
+                const startObj = new Date(dateStr + 'T00:00:00');
+                startObj.setDate(startObj.getDate() - 4);
+                period = {
+                    id: Date.now(),
+                    startDate: formatDate(startObj),
+                    endDate: dateStr
+                };
+                appState.periods.push(period);
+            } else {
+                // Boleh mengubah/merevisi tanggal selesai kapan saja (misal jika darah masih ada)
+                period.endDate = dateStr;
+            }
+
+            showToast("Hari Terakhir Haid Diperbarui! ❤️");
+            renderApp();
+        }
+
+        function clearPeriodEnd() {
+            let period = findPeriodForDate(appState.selectedDate);
+            if (period) {
+                period.endDate = null;
+                showToast("Tanda selesai mens dihapus");
+                renderApp();
             }
         }
 
-        window.onload = initApp;
+        // 4. Update Kartu Status Fase
+        function updateStatusCard() {
+            const statusCard = document.getElementById('statusCard');
+            const badge = document.getElementById('statusBadge');
+            const cycleDayInfo = document.getElementById('cycleDayInfo');
+            const title = document.getElementById('statusTitle');
+            const desc = document.getElementById('statusDesc');
+
+            const dateMap = buildDatePhaseMap();
+            const phase = dateMap[appState.selectedDate];
+            const latestPeriod = getLatestPeriod();
+
+            if (latestPeriod) {
+                const startObj = new Date(latestPeriod.startDate + 'T00:00:00');
+                const selObj = new Date(appState.selectedDate + 'T00:00:00');
+                const diffDays = Math.floor((selObj - startObj) / 86400000) + 1;
+
+                if (diffDays > 0) {
+                    cycleDayInfo.innerText = `Hari ke-${diffDays} Siklus`;
+                } else {
+                    cycleDayInfo.innerText = `Sebelum Siklus`;
+                }
+            } else {
+                cycleDayInfo.innerText = `--`;
+            }
+
+            if (phase) {
+                if (phase.type === 'period') {
+                    statusCard.className = "bg-gradient-to-br from-rose-500 to-pink-600 rounded-2xl p-3 text-white shadow-md transition-all";
+                    badge.innerText = "FASE MENSTRUASI 🩸";
+                    title.innerText = "Haid Sedang Berlangsung";
+                    desc.innerText = "Gunakan pembalut yang nyaman. Jangan lupa tandai hari terakhir jika haid sudah benar-benar selesai.";
+                } else if (phase.type === 'tembak_dalam') {
+                    statusCard.className = "bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl p-3 text-white shadow-md transition-all";
+                    badge.innerText = "FASE AMAN - TEMBAK DALAM 💖";
+                    title.innerText = "Masa Tidak Subur (Aman)";
+                    desc.innerText = "Maksimal 2 hari setelah haid selesai. Sangat aman untuk berhubungan & tembak di dalam dengan risiko kehamilan sangat rendah.";
+                } else if (phase.type === 'fertile') {
+                    statusCard.className = "bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl p-3 text-white shadow-md transition-all";
+                    badge.innerText = "FASE SUBUR 💜";
+                    title.innerText = "Masa Subur Tinggi";
+                    desc.innerText = "Peluang kehamilan tinggi. Gunakan kontrasepsi jika sedang menunda kehamilan.";
+                } else if (phase.type === 'ovulation') {
+                    statusCard.className = "bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-3 text-white shadow-md transition-all";
+                    badge.innerText = "PUNCAK OVULASI 🌟";
+                    title.innerText = "Pelepasan Sel Telur";
+                    desc.innerText = "Tingkat kesuburan berada di puncaknya. Sangat berisiko hamil jika berhubungan tanpa pengaman.";
+                }
+            } else {
+                statusCard.className = "bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl p-3 text-white shadow-md transition-all";
+                badge.innerText = "FASE REGULER / AMAN OK";
+                title.innerText = "Luar Masa Subur Utama";
+                desc.innerText = "Tanggal terpilih berada di luar jendela haid dan masa subur utama.";
+            }
+        }
+
+        // 5. Update Kartu Prediksi Medis (4 Kartu)
+        function updatePredictions() {
+            const latest = getLatestPeriod();
+
+            if (!latest) {
+                document.getElementById('predNextPeriod').innerText = "--";
+                document.getElementById('predFertile').innerText = "--";
+                document.getElementById('predOvulation').innerText = "--";
+                document.getElementById('predTembakDalam').innerText = "Tandai awal haid";
+                return;
+            }
+
+            const startObj = new Date(latest.startDate + 'T00:00:00');
+
+            // Haid Berikutnya
+            const nextPeriod = new Date(startObj);
+            const cycleLen = appState.cycleType === 'regular' ? appState.cycleLength : Math.round((appState.minCycle + appState.maxCycle) / 2);
+            nextPeriod.setDate(nextPeriod.getDate() + cycleLen);
+            document.getElementById('predNextPeriod').innerText = formatShortDate(nextPeriod);
+
+            // Masa Subur & Ovulasi
+            let fStart, fEnd, ovul;
+            if (appState.cycleType === 'regular') {
+                fStart = new Date(startObj); fStart.setDate(fStart.getDate() + (appState.cycleLength - 18));
+                fEnd = new Date(startObj); fEnd.setDate(fEnd.getDate() + (appState.cycleLength - 11));
+                ovul = new Date(startObj); ovul.setDate(ovul.getDate() + (appState.cycleLength - 14));
+            } else {
+                fStart = new Date(startObj); fStart.setDate(fStart.getDate() + (appState.minCycle - 18));
+                fEnd = new Date(startObj); fEnd.setDate(fEnd.getDate() + (appState.maxCycle - 11));
+                ovul = new Date(fStart.getTime() + (fEnd.getTime() - fStart.getTime()) / 2);
+            }
+
+            document.getElementById('predFertile').innerText = `${fStart.getDate()} - ${fEnd.getDate()} ${monthNames[fEnd.getMonth()].slice(0,3)}`;
+            document.getElementById('predOvulation').innerText = formatShortDate(ovul);
+
+            // Prediksi Tembak Dalam (2 Hari Pasca Akhir Haid)
+            const elTb = document.getElementById('predTembakDalam');
+            const elTbSub = document.getElementById('predTembakDalamSub');
+
+            if (latest.endDate) {
+                const endObj = new Date(latest.endDate + 'T00:00:00');
+                const tb1 = new Date(endObj); tb1.setDate(tb1.getDate() + 1);
+                const tb2 = new Date(endObj); tb2.setDate(tb2.getDate() + 2);
+
+                if (tb1.getMonth() === tb2.getMonth()) {
+                    elTb.innerText = `${tb1.getDate()} - ${tb2.getDate()} ${monthNames[tb2.getMonth()].slice(0,3)}`;
+                } else {
+                    elTb.innerText = `${tb1.getDate()} ${monthNames[tb1.getMonth()].slice(0,3)} - ${tb2.getDate()} ${monthNames[tb2.getMonth()].slice(0,3)}`;
+                }
+                elTbSub.innerText = "Aman 2 hari pasca haid";
+            } else {
+                elTb.innerText = "Tandai akhir haid";
+                elTbSub.innerText = "Klik tanggal & pilih 'Selesai Mens'";
+            }
+        }
+
+        // Utility Helper Tanggal
+        function formatDate(d) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatShortDate(d) {
+            return `${d.getDate()} ${monthNames[d.getMonth()].slice(0,3)} ${d.getFullYear()}`;
+        }
+
+        // Custom Toast Function
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.innerText = msg;
+            
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
     </script>
 </body>
 </html>
